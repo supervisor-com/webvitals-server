@@ -21,13 +21,21 @@
     background-color: white;
   }
 
-  table, th, td {
+  td {
     border: 1px solid black;
+  }
+
+  table#settings {
     padding: 5px;
   }
+  #timings table {
+    padding: 0;
+  }
+  #timings td {
+    padding: 0.1em;
+  }
   #timings h2 {
-    font-size: 4em;
-    margin: 0.25em;
+    font-size: 8em;
   }
 
 </style>
@@ -36,25 +44,26 @@
   <div id="shade"></div>
 
   <h1>https://web.dev/vitals test page</h1>
-  <div id="timings">
+  <fieldset id="timings">
+    <legend>timings (in ms)</legend>
     <table>
       <tr>
         <td>
-          <h2>TTFB: <span id="ttfbEl"></span></h2>
+          <h2>TTFB <span id="ttfbEl"></span></h2>
         </td>
         <td>
-          <h2>DOM: <span id="domEl"></span></h2>
+          <h2>DOM <span id="domEl"></span></h2>
         </td>
       </tr>
       <tr>
         <td>
-          <h2>FCP: <span id="fcpEl"></span></h2>
+          <h2>FCP <span id="fcpEl"></span></h2>
         </td>
         <td>
-          <h2>LCP: <span id="lcpEl"></span></h2>
+          <h2>LCP <span id="lcpEl"></span></h2>
         </td>
         <td>
-          <h2>CLS: <span id="clsEl"></span></h2>
+          <h2>CLS <span id="clsEl"></span></h2>
         </td>
       </tr>
     </table>
@@ -78,7 +87,7 @@
       </a>
     </p>
 
-    <table>
+    <table id="settings">
       <tr>
         <td>TTFB</td><td>{{ .ttfb }}</td>
         <td>DOM</td><td>{{ .dom }}</td>
@@ -114,14 +123,14 @@
         console.log("lcp", entryList);
         var entries = entryList.getEntries();
         if (entries.length > 0) {
-          lcpEl.textContent = Math.round(entries[entries.length - 1].startTime) + "ms";
+          lcpEl.textContent = Math.round(entries[entries.length - 1].startTime);
         }
       });
       const poCls = new PerformanceObserver((entryList) => {
         console.log("cls", entryList);
         var entries = entryList.getEntries();
         if (entries.length > 0) {
-          clsEl.textContent = Math.round(entries[entries.length - 1].startTime) + "ms";
+          clsEl.textContent = Math.round(entries[entries.length - 1].startTime);
         }
       });
 
@@ -136,9 +145,9 @@
       var dom = Math.round(performance.getEntriesByType('navigation')[0]['domContentLoadedEventEnd']);
       var fcp = Math.round(performance.getEntriesByName('first-contentful-paint')[0] && performance.getEntriesByName('first-contentful-paint')[0]['startTime'])
 
-      ttfbEl.textContent = ttfb + "ms";
-      domEl.textContent = dom + "ms";
-      fcpEl.textContent = fcp + "ms";
+      ttfbEl.textContent = ttfb;
+      domEl.textContent = dom;
+      fcpEl.textContent = fcp;
 
     }, 100)
   </script>

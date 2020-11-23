@@ -1,0 +1,8 @@
+version: "3.7"
+
+services:
+  webvitals-server:
+    build: .
+    image: supervisorcom/webvitals-server
+    ports:
+      - 8080:8080

@@ -1,0 +1,76 @@
+<style>
+  body: {
+    display: none;
+  }
+
+  img#lcp {
+    min-width: 640px;
+    min-height: 480px;
+    border: 1px solid;
+  }
+  img#cls {
+    broder: 1px dashed;
+  }
+  #shade {
+    display: none;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: white;
+  }
+
+  table, th, td {
+    border: 1px solid black;
+    padding: 5px;
+  }
+</style>
+
+<body style="display: none">
+  <div id="shade"></div>
+  <a href="?ttfb={{ .ttfb }}&fcp={{ .fcp }}&lcp={{ .lcp }}&cls={{ .cls }}&seq={{ .seq }}">
+    ?ttfb={{ .ttfb }}&fcp={{ .fcp }}&lcp={{ .lcp }}&cls={{ .cls }}&seq={{ .seq }}
+  </a>
+
+  <fieldset>
+    <legend>CLS</legend>
+    <img alt="CLS" id="cls" src="/images/640x100.jpg?ttfb={{ .cls }}&timestamp={{ .timestamp }}"></img>
+  </fieldset>
+
+  <fieldset>
+    <legend>Settings</legend>
+    <table>
+      <tr>
+        <td>TTFB</td><td>{{ .ttfb }}</td>
+        <td>FCP</td><td>{{ .fcp }}</td>
+        <td>LCP</td><td>{{ .lcp }}</td>
+        <td>CLS</td><td>{{ .cls }}</td>
+      </tr>
+      <tr>
+        <td>timestamp</td><td>{{ .timestamp }}</td>
+        <td>seq</td><td>{{ .seq }}</td>
+      </tr>
+    </table>
+  </fieldset>
+
+  <br>
+
+  <fieldset>
+    <legend>LCP</legend>
+    <img alt="LCP" id="lcp" src="/images/robot.jpg?ttfb={{ .lcp }}&timestamp={{ .timestamp }}"></img>
+  </fieldset>
+
+  <script>
+    setTimeout(()=>{
+      document.body.style.display = "block";
+    }, {{ .fcpMillis }});
+  </script>
+
+  <script>
+    window.onbeforeunload = function() {
+      shade.style.display = "block";
+    }
+  </script>
+
+</body>

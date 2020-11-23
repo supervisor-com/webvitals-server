@@ -52,7 +52,7 @@
 
   <fieldset>
     <legend>CLS</legend>
-    <img alt="CLS" id="cls" src="/assets/640x100.jpg?ttfb={{ .cls }}&timestamp={{ .timestamp }}"></img>
+    <img alt="CLS" id="cls" src="/assets/cls.jpg?ttfb={{ .cls }}&timestamp={{ .timestamp }}"></img>
   </fieldset>
 
   <fieldset style="width: 250px; float: left;">
@@ -126,17 +126,17 @@
   <script>
     (function() {
       const poLcp = new PerformanceObserver((entryList) => {
-        console.log("lcp", entryList);
+        console.log("lcp", entryList.getEntries());
         var entries = entryList.getEntries();
         if (entries.length > 0) {
           lcpEl.textContent = Math.round(entries[entries.length - 1].startTime);
         }
       });
       const poCls = new PerformanceObserver((entryList) => {
-        console.log("cls", entryList);
+        console.log("cls", entryList.getEntries());
         var entries = entryList.getEntries();
-        if (entries.length > 0) {
-          clsEl.textContent = Math.round(entries[entries.length - 1].startTime);
+        if (entries.length) {
+          clsEl.textContent = entries[entries.length - 1].value.toFixed(3);
         }
       });
 

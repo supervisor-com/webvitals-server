@@ -54,7 +54,7 @@
     background-color: red;
   }
   .lcp {
-    background-color: lightgreen;
+    background-color: lightgreen !important;
   }
 
 </style>
@@ -73,7 +73,7 @@
 
   <fieldset>
     <legend>CLS</legend>
-    <img alt="CLS" id="cls" src="/assets/cls.jpg?ttfb={{ .cls }}&timestamp={{ .timestamp }}"></img>
+    <img alt="CLS" id="cls" src="/assets/cls.webp?ttfb={{ .cls }}&timestamp={{ .timestamp }}"></img>
   </fieldset>
 
   <table>
@@ -112,12 +112,11 @@
     </tr>
   </table>
 
-
   <fieldset>
     <legend>Settings</legend>
     <p>
-      current settings: <a href="?ttfb={{ .ttfb }}&dom={{ .dom }}&fcp={{ .fcp }}&lcp={{ .lcp }}&cls={{ .cls }}&seq={{ .seq }}">
-        ?ttfb={{ .ttfb }}&dom={{ .dom }}&fcp={{ .fcp }}&lcp={{ .lcp }}&cls={{ .cls }}&seq={{ .seq }}
+      current settings: <a href="?ttfb={{ .ttfb }}&dom={{ .dom }}&fcp={{ .fcp }}&lcp={{ .lcp }}&cls={{ .cls }}&highlight={{ .highlight }}&seq={{ .seq }}">
+        ?ttfb={{ .ttfb }}&dom={{ .dom }}&fcp={{ .fcp }}&lcp={{ .lcp }}&cls={{ .cls }}&highlight={{ .highlight }}&seq={{ .seq }}
       </a>
     </p>
 
@@ -129,9 +128,23 @@ LCP: {{ .lcp }}
 CLS: {{ .cls }}
 
 timestamp (for cache busting): {{ .timestamp }}
+highlight (CLS, LCP elements): {{ .highlight }}
 seq: {{ .seq }}
     </pre>
   </fieldset>
+
+  <fieldset>
+    <legend>Log</legend>
+    <ul id="log"></ul>
+  </fieldset>
+  <script>
+    window.__log = (message) => {
+      var el = document.createElement("li");
+      el.textContent = (new Date()).toISOString() + " " + message;
+
+      log.appendChild(el);
+    }
+  </script>
 
   <script>
     setTimeout(()=>{
@@ -152,14 +165,15 @@ seq: {{ .seq }}
         var entries = entryList.getEntries();
         if (entries.length > 0) {
           var lastEntry = entries[entries.length - 1];
-          if (lastEntry.element) {
-            lastEntry.element.classList.add("lcp")
-            setTimeout(()=>{
-              lastEntry.element.classList.remove("lcp");
-            }, 750)
-          }
+          var lcpTime = Math.round(lastEntry.startTime);
 
-          lcpEl.textContent = Math.round(lastEntry.startTime);
+          __log("new LCP timing: " + lcpTime);
+          lastEntry.element.classList.add("lcp")
+          setTimeout(()=>{
+            lastEntry.element.classList.remove("lcp");
+          }, {{ .highlight }})
+
+          lcpEl.textContent = lcpTime;
         }
       });
       const poCls = new PerformanceObserver((entryList) => {
@@ -167,12 +181,16 @@ seq: {{ .seq }}
         var entries = entryList.getEntries();
         if (entries.length) {
           var lastEntry = entries[entries.length - 1];
-          clsEl.textContent = lastEntry.value.toFixed(3);
+          var clsValue = lastEntry.value.toFixed(3);
+
+          __log("new CLS value: " + clsValue);
+
+          clsEl.textContent = clsValue;
           lastEntry.sources.forEach((layoutshiftAttribution) => {
             layoutshiftAttribution.node.classList.add("cls");
             setTimeout(()=>{
               layoutshiftAttribution.node.classList.remove("cls");
-            }, 750)
+            }, {{ .highlight }})
           })
         }
       });
@@ -183,7 +201,7 @@ seq: {{ .seq }}
   </script>
 
   <script>
-    setInterval(()=> {
+    var fetchPerf = () => {
       var ttfb = Math.round(performance.getEntriesByType('navigation')[0]['responseEnd']);
       var dom = Math.round(performance.getEntriesByType('navigation')[0]['domContentLoadedEventEnd']);
       var fcp = Math.round(performance.getEntriesByName('first-contentful-paint')[0] && performance.getEntriesByName('first-contentful-paint')[0]['startTime'])
@@ -195,7 +213,13 @@ seq: {{ .seq }}
       if (!isNaN(fcp)) {
         fcpEl.textContent = fcp;
       }
-    }, 25)
+
+      if (dom < 1 || isNaN(fcp)) {
+        setTimeout(fetchPerf, 25);
+      }
+    }
+    fetchPerf()
+
   </script>
   <script src="/assets/empty.js?ttfb={{ .dom }}&timestamp={{ .timestamp }}"></script>
 </body>

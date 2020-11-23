@@ -88,7 +88,7 @@
       </td>
       <td>
         <fieldset id="timings">
-          <legend>timings (in ms)</legend>
+          <legend>Timings (in ms)</legend>
           <table>
             <tr>
               <td>
@@ -121,22 +121,16 @@
       </a>
     </p>
 
-    <table id="settings">
-      <tr>
-        <td>TTFB</td><td>{{ .ttfb }}</td>
-        <td>DOM</td><td>{{ .dom }}</td>
-        <td>FCP</td><td>{{ .fcp }}</td>
-        <td>LCP</td><td>{{ .lcp }}</td>
-        <td>CLS</td><td>{{ .cls }}</td>
-      </tr>
-    </table>
+    <pre>
+TTFB (additional server side sleep): {{ .ttfb }}
+DOM: {{ .dom }}
+FCP: {{ .fcp }}
+LCP: {{ .lcp }}
+CLS: {{ .cls }}
 
-    <table>
-      <tr>
-        <td>timestamp</td><td>{{ .timestamp }}</td>
-        <td>seq</td><td>{{ .seq }}</td>
-      </tr>
-    </table>
+timestamp (for cache busting): {{ .timestamp }}
+seq: {{ .seq }}
+    </pre>
   </fieldset>
 
   <script>

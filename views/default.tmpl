@@ -26,6 +26,7 @@
     padding: 5px;
   }
   #timings h2 {
+    font-size: 4em;
     margin: 0.25em;
   }
 
@@ -36,11 +37,27 @@
 
   <h1>https://web.dev/vitals test page</h1>
   <div id="timings">
-    <h2>TTFB: <span id="ttfbEl"></span></h2>
-    <h2>DOM: <span id="domEl"></span></h2>
-    <h2>FCP: <span id="fcpEl"></span></h2>
-    <h2>LCP: <span id="lcpEl"></span></h2>
-    <h2>CLS: <span id="clsEl"></span></h2>
+    <table>
+      <tr>
+        <td>
+          <h2>TTFB: <span id="ttfbEl"></span></h2>
+        </td>
+        <td>
+          <h2>DOM: <span id="domEl"></span></h2>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <h2>FCP: <span id="fcpEl"></span></h2>
+        </td>
+        <td>
+          <h2>LCP: <span id="lcpEl"></span></h2>
+        </td>
+        <td>
+          <h2>CLS: <span id="clsEl"></span></h2>
+        </td>
+      </tr>
+    </table>
   </div>
 
   <fieldset>

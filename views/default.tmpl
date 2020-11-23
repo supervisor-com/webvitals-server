@@ -44,6 +44,12 @@
   <div id="shade"></div>
 
   <h1>https://web.dev/vitals test page</h1>
+
+  <fieldset>
+    <legend>CLS</legend>
+    <img alt="CLS" id="cls" src="/assets/640x100.jpg?ttfb={{ .cls }}&timestamp={{ .timestamp }}"></img>
+  </fieldset>
+
   <fieldset id="timings">
     <legend>timings (in ms)</legend>
     <table>
@@ -67,11 +73,6 @@
         </td>
       </tr>
     </table>
-  </div>
-
-  <fieldset>
-    <legend>CLS</legend>
-    <img alt="CLS" id="cls" src="/assets/640x100.jpg?ttfb={{ .cls }}&timestamp={{ .timestamp }}"></img>
   </fieldset>
 
   <fieldset>

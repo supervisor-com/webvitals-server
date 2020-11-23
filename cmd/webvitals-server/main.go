@@ -13,7 +13,7 @@ func main() {
 	r := gin.Default()
 
 	r.LoadHTMLGlob("./views/*")
-	r.GET("/default", func(c *gin.Context) {
+	r.GET("/", func(c *gin.Context) {
 		ttfb, _ := time.ParseDuration(c.DefaultQuery("ttfb", "0s"))
 		fcp, _ := time.ParseDuration(c.DefaultQuery("fcp", "1.0s"))
 		dom, _ := time.ParseDuration(c.DefaultQuery("dom", "1.5s"))
@@ -27,7 +27,7 @@ func main() {
 		fcpMillis := int32(fcp) / 1000000
 
 		time.Sleep(ttfb)
-		c.HTML(http.StatusOK, "default.tmpl", gin.H{
+		c.HTML(http.StatusOK, "index.tmpl", gin.H{
 			"ttfb":      ttfb,
 			"fcp":       fcp,
 			"dom":       dom,
@@ -46,10 +46,6 @@ func main() {
 		time.Sleep(ttfb)
 
 		c.FileFromFS(filename, gin.Dir("./assets", false))
-	})
-
-	r.GET("/", func(c *gin.Context) {
-		c.HTML(http.StatusOK, "index.tmpl", gin.H{})
 	})
 
 	fmt.Println("listening at :8080")

@@ -16,7 +16,7 @@
     broder: 1px dashed;
   }
 
-  #shade {
+  #shade #chromeRequired {
     display: none;
     position: absolute;
     top: 0;
@@ -60,6 +60,13 @@
 </style>
 
 <body style="display: none">
+  <script>
+    var isChrome = navigator.userAgent.toLowerCase().indexOf('chrome') > -1;
+    if (!isChrome) {
+      window.location.href = "/assets/chromeonly.html"
+    }
+  </script>
+
   <div id="shade"></div>
 
   <h1>https://web.dev/vitals test page</h1>
@@ -155,7 +162,7 @@
             lastEntry.element.classList.add("lcp")
             setTimeout(()=>{
               lastEntry.element.classList.remove("lcp");
-            }, 500)
+            }, 750)
           }
 
           lcpEl.textContent = Math.round(lastEntry.startTime);
@@ -171,7 +178,7 @@
             layoutshiftAttribution.node.classList.add("cls");
             setTimeout(()=>{
               layoutshiftAttribution.node.classList.remove("cls");
-            }, 500)
+            }, 750)
           })
         }
       });
@@ -194,7 +201,7 @@
       if (!isNaN(fcp)) {
         fcpEl.textContent = fcp;
       }
-    }, 10)
+    }, 25)
   </script>
   <script src="/assets/empty.js?ttfb={{ .dom }}&timestamp={{ .timestamp }}"></script>
 </body>

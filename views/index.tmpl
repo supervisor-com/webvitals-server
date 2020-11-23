@@ -42,7 +42,7 @@
     padding: 5px;
   }
   #log li {
-    font-size: 4em;
+    font-size: 3em;
   }
 
   h2 {
@@ -143,6 +143,8 @@ seq: {{ .seq }}
   <script>
     window.__log = (message) => {
       var el = document.createElement("li");
+      el.className = "log";
+
       el.textContent = (new Date()).toISOString() + " " + message;
 
       log.appendChild(el);

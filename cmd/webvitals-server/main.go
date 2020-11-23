@@ -45,7 +45,7 @@ func main() {
 	})
 
 	r.GET("/", func(c *gin.Context) {
-		c.String(http.StatusOK, "webvitals-server")
+		c.HTML(http.StatusOK, "index.tmpl", gin.H{})
 	})
 
 	fmt.Println("listening at :8080")

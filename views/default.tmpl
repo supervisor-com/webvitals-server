@@ -4,8 +4,8 @@
   }
 
   img#lcp {
-    min-width: 640px;
-    min-height: 480px;
+    min-width: 240px;
+    min-height: 180px;
     border: 1px solid;
   }
   img#cls {
@@ -36,7 +36,11 @@
   }
   #timings h2 {
     margin: 0;
-    font-size: 8em;
+    font-size: 2em;
+  }
+  #timings p {
+    margin: 0;
+    font-size: 5em;
   }
 
 </style>
@@ -51,34 +55,34 @@
     <img alt="CLS" id="cls" src="/assets/640x100.jpg?ttfb={{ .cls }}&timestamp={{ .timestamp }}"></img>
   </fieldset>
 
+  <fieldset style="width: 250px; float: left;">
+    <legend>LCP</legend>
+    <img alt="LCP" id="lcp" src="/assets/robot.jpg?ttfb={{ .lcp }}&timestamp={{ .timestamp }}"></img>
+  </fieldset>
+
   <fieldset id="timings">
     <legend>timings (in ms)</legend>
     <table>
       <tr>
         <td>
-          <h2>TTFB <span id="ttfbEl"></span></h2>
+          <h2>TTFB <p id="ttfbEl"></p></h2>
         </td>
         <td colspan=2>
-          <h2>DOM <span id="domEl"></span></h2>
+          <h2>DOM <p id="domEl"></p></h2>
         </td>
       </tr>
       <tr>
         <td>
-          <h2>FCP <span id="fcpEl"></span></h2>
+          <h2>FCP <p id="fcpEl"></p></h2>
         </td>
         <td>
-          <h2>LCP <span id="lcpEl"></span></h2>
+          <h2>LCP <p id="lcpEl"></p></h2>
         </td>
         <td>
-          <h2>CLS <span id="clsEl"></span></h2>
+          <h2>CLS <p id="clsEl"></p></h2>
         </td>
       </tr>
     </table>
-  </fieldset>
-
-  <fieldset>
-    <legend>LCP</legend>
-    <img alt="LCP" id="lcp" src="/assets/robot.jpg?ttfb={{ .lcp }}&timestamp={{ .timestamp }}"></img>
   </fieldset>
 
   <fieldset>

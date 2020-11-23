@@ -148,9 +148,12 @@
       var fcp = Math.round(performance.getEntriesByName('first-contentful-paint')[0] && performance.getEntriesByName('first-contentful-paint')[0]['startTime'])
 
       ttfbEl.textContent = ttfb;
-      domEl.textContent = dom;
-      fcpEl.textContent = fcp;
-
+      if (dom > 0) {
+        domEl.textContent = dom;
+      }
+      if (!isNaN(fcp)) {
+        fcpEl.textContent = fcp;
+      }
     }, 100)
   </script>
   <script src="/assets/empty.js?ttfb={{ .dom }}&timestamp={{ .timestamp }}"></script>

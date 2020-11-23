@@ -3,14 +3,19 @@
     display: none;
   }
 
+  h1 {
+    font-size: 1em;
+  }
+
   img#lcp {
-    min-width: 240px;
-    min-height: 180px;
+    min-width: 400px;
+    min-height: 267px;
     border: 1px solid;
   }
   img#cls {
     broder: 1px dashed;
   }
+
   #shade {
     display: none;
     position: absolute;
@@ -25,22 +30,31 @@
     border: 1px solid black;
   }
 
+  tr {
+    vertical-align: top;
+  }
+
+  #timings td {
+    padding: 1em;
+  }
+
   table#settings {
     padding: 5px;
   }
-  #timings table {
-    padding: 0;
-  }
-  #timings td {
-    padding: 0.1em;
-  }
-  #timings h2 {
+
+  h2 {
     margin: 0;
-    font-size: 2em;
+    font-size: 4em;
   }
-  #timings p {
+  .timing {
     margin: 0;
-    font-size: 4.5em;
+    font-size: 8.5em;
+  }
+  .cls {
+    background-color: red;
+  }
+  .lcp {
+    background-color: lightgreen;
   }
 
 </style>
@@ -55,35 +69,42 @@
     <img alt="CLS" id="cls" src="/assets/cls.jpg?ttfb={{ .cls }}&timestamp={{ .timestamp }}"></img>
   </fieldset>
 
-  <fieldset style="width: 250px; float: left;">
-    <legend>LCP</legend>
-    <img alt="LCP" id="lcp" src="/assets/robot.jpg?ttfb={{ .lcp }}&timestamp={{ .timestamp }}"></img>
-  </fieldset>
+  <table>
+    <tr>
+      <td style="width: 480px;">
+        <fieldset>
+          <legend>LCP</legend>
+          <img alt="LCP" id="lcp" src="/assets/robot.jpg?ttfb={{ .lcp }}&timestamp={{ .timestamp }}"></img>
+        </fieldset>
 
-  <fieldset id="timings">
-    <legend>timings (in ms)</legend>
-    <table>
-      <tr>
-        <td>
-          <h2>TTFB <p id="ttfbEl"></p></h2>
-        </td>
-        <td colspan=2>
-          <h2>DOM <p id="domEl"></p></h2>
-        </td>
-      </tr>
-      <tr>
-        <td>
-          <h2>FCP <p id="fcpEl"></p></h2>
-        </td>
-        <td>
-          <h2>LCP <p id="lcpEl"></p></h2>
-        </td>
-        <td>
-          <h2>CLS <p id="clsEl"></p></h2>
-        </td>
-      </tr>
-    </table>
-  </fieldset>
+        <h2>CLS</h2><p class="timing" id="clsEl"></p>
+      </td>
+      <td>
+        <fieldset id="timings">
+          <legend>timings (in ms)</legend>
+          <table>
+            <tr>
+              <td>
+                <h2>TTFB</h2><p class="timing" id="ttfbEl"></p>
+              </td>
+              <td colspan=2>
+                <h2>DOM</h2><p class="timing" id="domEl"></p>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <h2>FCP</h2><p class="timing" id="fcpEl"></p>
+              </td>
+              <td>
+                <h2>LCP</h2><p class="timing" id="lcpEl"></p>
+              </td>
+            </tr>
+          </table>
+        </fieldset>
+      </td>
+    </tr>
+  </table>
+
 
   <fieldset>
     <legend>Settings</legend>
@@ -129,14 +150,29 @@
         console.log("lcp", entryList.getEntries());
         var entries = entryList.getEntries();
         if (entries.length > 0) {
-          lcpEl.textContent = Math.round(entries[entries.length - 1].startTime);
+          var lastEntry = entries[entries.length - 1];
+          if (lastEntry.element) {
+            lastEntry.element.classList.add("lcp")
+            setTimeout(()=>{
+              lastEntry.element.classList.remove("lcp");
+            }, 500)
+          }
+
+          lcpEl.textContent = Math.round(lastEntry.startTime);
         }
       });
       const poCls = new PerformanceObserver((entryList) => {
         console.log("cls", entryList.getEntries());
         var entries = entryList.getEntries();
         if (entries.length) {
-          clsEl.textContent = entries[entries.length - 1].value.toFixed(3);
+          var lastEntry = entries[entries.length - 1];
+          clsEl.textContent = lastEntry.value.toFixed(3);
+          lastEntry.sources.forEach((layoutshiftAttribution) => {
+            layoutshiftAttribution.node.classList.add("cls");
+            setTimeout(()=>{
+              layoutshiftAttribution.node.classList.remove("cls");
+            }, 500)
+          })
         }
       });
 
@@ -158,7 +194,7 @@
       if (!isNaN(fcp)) {
         fcpEl.textContent = fcp;
       }
-    }, 100)
+    }, 10)
   </script>
   <script src="/assets/empty.js?ttfb={{ .dom }}&timestamp={{ .timestamp }}"></script>
 </body>

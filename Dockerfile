@@ -9,7 +9,7 @@ FROM alpine:3.12
 WORKDIR /app
 COPY --from=builder /build/webvitals-server /usr/bin
 COPY --from=builder /build/views/ /app/views/
-COPY --from=builder /build/static/ /app/static/
+COPY --from=builder /build/assets/ /app/assets/
 
 ENV GIN_MODE=release
 ENTRYPOINT [ "/usr/bin/webvitals-server" ]

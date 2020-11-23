@@ -25,40 +25,58 @@
     border: 1px solid black;
     padding: 5px;
   }
+  #timings h2 {
+    margin: 0.25em;
+  }
+
 </style>
 
 <body style="display: none">
   <div id="shade"></div>
-  <a href="?ttfb={{ .ttfb }}&fcp={{ .fcp }}&lcp={{ .lcp }}&cls={{ .cls }}&seq={{ .seq }}">
-    ?ttfb={{ .ttfb }}&fcp={{ .fcp }}&lcp={{ .lcp }}&cls={{ .cls }}&seq={{ .seq }}
-  </a>
+
+  <h1>https://web.dev/vitals test page</h1>
+  <div id="timings">
+    <h2>TTFB: <span id="ttfbEl"></span></h2>
+    <h2>DOM: <span id="domEl"></span></h2>
+    <h2>FCP: <span id="fcpEl"></span></h2>
+    <h2>LCP: <span id="lcpEl"></span></h2>
+    <h2>CLS: <span id="clsEl"></span></h2>
+  </div>
 
   <fieldset>
     <legend>CLS</legend>
-    <img alt="CLS" id="cls" src="/images/640x100.jpg?ttfb={{ .cls }}&timestamp={{ .timestamp }}"></img>
+    <img alt="CLS" id="cls" src="/assets/640x100.jpg?ttfb={{ .cls }}&timestamp={{ .timestamp }}"></img>
+  </fieldset>
+
+  <fieldset>
+    <legend>LCP</legend>
+    <img alt="LCP" id="lcp" src="/assets/robot.jpg?ttfb={{ .lcp }}&timestamp={{ .timestamp }}"></img>
   </fieldset>
 
   <fieldset>
     <legend>Settings</legend>
+    <p>
+      current settings: <a href="?ttfb={{ .ttfb }}&dom={{ .dom }}&fcp={{ .fcp }}&lcp={{ .lcp }}&cls={{ .cls }}&seq={{ .seq }}">
+        ?ttfb={{ .ttfb }}&dom={{ .dom }}&fcp={{ .fcp }}&lcp={{ .lcp }}&cls={{ .cls }}&seq={{ .seq }}
+      </a>
+    </p>
+
     <table>
       <tr>
         <td>TTFB</td><td>{{ .ttfb }}</td>
+        <td>DOM</td><td>{{ .dom }}</td>
         <td>FCP</td><td>{{ .fcp }}</td>
         <td>LCP</td><td>{{ .lcp }}</td>
         <td>CLS</td><td>{{ .cls }}</td>
       </tr>
+    </table>
+
+    <table>
       <tr>
         <td>timestamp</td><td>{{ .timestamp }}</td>
         <td>seq</td><td>{{ .seq }}</td>
       </tr>
     </table>
-  </fieldset>
-
-  <br>
-
-  <fieldset>
-    <legend>LCP</legend>
-    <img alt="LCP" id="lcp" src="/images/robot.jpg?ttfb={{ .lcp }}&timestamp={{ .timestamp }}"></img>
   </fieldset>
 
   <script>
@@ -73,4 +91,39 @@
     }
   </script>
 
+  <script>
+    (function() {
+      const poLcp = new PerformanceObserver((entryList) => {
+        console.log("lcp", entryList);
+        var entries = entryList.getEntries();
+        if (entries.length > 0) {
+          lcpEl.textContent = Math.round(entries[entries.length - 1].startTime) + "ms";
+        }
+      });
+      const poCls = new PerformanceObserver((entryList) => {
+        console.log("cls", entryList);
+        var entries = entryList.getEntries();
+        if (entries.length > 0) {
+          clsEl.textContent = Math.round(entries[entries.length - 1].startTime) + "ms";
+        }
+      });
+
+      poLcp.observe({type: 'largest-contentful-paint', buffered: true});
+      poCls.observe({type: 'layout-shift', buffered: true});
+    })();
+  </script>
+
+  <script>
+    setInterval(()=> {
+      var ttfb = Math.round(performance.getEntriesByType('navigation')[0]['responseEnd']);
+      var dom = Math.round(performance.getEntriesByType('navigation')[0]['domContentLoadedEventEnd']);
+      var fcp = Math.round(performance.getEntriesByName('first-contentful-paint')[0] && performance.getEntriesByName('first-contentful-paint')[0]['startTime'])
+
+      ttfbEl.textContent = ttfb + "ms";
+      domEl.textContent = dom + "ms";
+      fcpEl.textContent = fcp + "ms";
+
+    }, 100)
+  </script>
+  <script src="/assets/empty.js?ttfb={{ .dom }}&timestamp={{ .timestamp }}"></script>
 </body>

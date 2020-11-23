@@ -14,8 +14,9 @@ func main() {
 
 	r.LoadHTMLGlob("./views/*")
 	r.GET("/default", func(c *gin.Context) {
-		ttfb, _ := time.ParseDuration(c.DefaultQuery("ttfb", "0.5s"))
+		ttfb, _ := time.ParseDuration(c.DefaultQuery("ttfb", "0s"))
 		fcp, _ := time.ParseDuration(c.DefaultQuery("fcp", "1.0s"))
+		dom, _ := time.ParseDuration(c.DefaultQuery("dom", "1.5s"))
 		lcp, _ := time.ParseDuration(c.DefaultQuery("lcp", "2.0s"))
 		cls, _ := time.ParseDuration(c.DefaultQuery("cls", "2.5s"))
 
@@ -28,6 +29,7 @@ func main() {
 		c.HTML(http.StatusOK, "default.tmpl", gin.H{
 			"ttfb":      ttfb,
 			"fcp":       fcp,
+			"dom":       dom,
 			"lcp":       lcp,
 			"cls":       cls,
 			"timestamp": timestamp,
@@ -36,12 +38,12 @@ func main() {
 		})
 	})
 
-	r.GET("/images/:filename", func(c *gin.Context) {
+	r.GET("/assets/:filename", func(c *gin.Context) {
 		filename, _ := c.Params.Get("filename")
 		ttfb, _ := time.ParseDuration(c.DefaultQuery("ttfb", "0"))
 		time.Sleep(ttfb)
 
-		c.FileFromFS(filename, gin.Dir("./static", false))
+		c.FileFromFS(filename, gin.Dir("./assets", false))
 	})
 
 	r.GET("/", func(c *gin.Context) {
